@@ -417,7 +417,7 @@ class ImageCarousel extends React.Component<PropsType, StateType> {
   };
 
   render() {
-    const {style, horizontal = true, contentContainerStyle, childStyle} = this.props;
+    const {style, horizontal = true, contentContainerStyle, rowStyle, childStyle} = this.props;
     const {
       fullscreen,
       animating,
@@ -428,17 +428,8 @@ class ImageCarousel extends React.Component<PropsType, StateType> {
     const getOpacity = (idx: number) => ({
       opacity: selectedImageHidden && selectedIdx === idx ? 0 : 1,
     });
-
-    return (
-      <View style={style}>
-        <ScrollView
-          horizontal={horizontal}
-          contentContainerStyle={contentContainerStyle}
-          scrollEnabled={!animating}
-          alwaysBounceHorizontal={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          {this.getChildren().map((child, idx) => (
+    
+    const children = this.getChildren().map((child, idx) => (
             <TouchableWithoutFeedback
               key={`slider-image-${idx}`} // eslint-disable-line react/no-array-index-key
               onPress={() => this.open(idx)}
@@ -453,7 +444,28 @@ class ImageCarousel extends React.Component<PropsType, StateType> {
                 {child}
               </View>
             </TouchableWithoutFeedback>
-          ))}
+          ))
+    
+    const rows = []
+    
+    for (i = 0; i < children.length/2; i++) { 
+      rows.push(<View
+        style={rowStyle}
+      >
+          {children.splice(2*i, 2*i + 2)}
+      </View>)
+    }
+
+    return (
+      <View style={style}>
+        <ScrollView
+          horizontal={horizontal}
+          contentContainerStyle={contentContainerStyle}
+          scrollEnabled={!animating}
+          alwaysBounceHorizontal={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          {rows}
         </ScrollView>
         {fullscreen && this.renderFullscreen()}
       </View>
