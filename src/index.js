@@ -27,6 +27,7 @@ const screenHeight =
 type PropsType = {|
   style?: ?StyleObj,
   contentContainerStyle?: ?StyleObj,
+  childStyle?: ?StyleObj,
   activeProps?: ?{[key: string]: mixed},
   activeComponents?: $ReadOnlyArray<React.Element<*>>,
   children?: React.Element<*> | $ReadOnlyArray<React.Element<*>>,
@@ -416,7 +417,7 @@ class ImageCarousel extends React.Component<PropsType, StateType> {
   };
 
   render() {
-    const {style, horizontal = true, contentContainerStyle} = this.props;
+    const {style, horizontal = true, contentContainerStyle, childStyle} = this.props;
     const {
       fullscreen,
       animating,
@@ -441,6 +442,7 @@ class ImageCarousel extends React.Component<PropsType, StateType> {
             <TouchableWithoutFeedback
               key={`slider-image-${idx}`} // eslint-disable-line react/no-array-index-key
               onPress={() => this.open(idx)}
+              style={childStyle}
             >
               <View
                 ref={ref => {
